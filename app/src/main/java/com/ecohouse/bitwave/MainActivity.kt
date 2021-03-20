@@ -14,8 +14,10 @@ class MainActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
 
         binding.bottomNavigation.setOnNavigationItemSelectedListener {
-            println("${it.itemId} clicked")
-            true
+            when (it.itemId) {
+                R.id.page_1 -> true
+                else -> false
+            }
         }
     }
 }
