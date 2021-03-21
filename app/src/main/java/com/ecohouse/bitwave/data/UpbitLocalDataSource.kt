@@ -32,7 +32,7 @@ class UpbitLocalDataSource : UpbitDataSource {
 
     override suspend fun saveCoins(coins: List<Coin>) {
         coins.forEach {
-            COINS_LOCAL_DATA[it.id] = it
+            COINS_LOCAL_DATA[it.market] = it
         }
         refreshCoins()
     }

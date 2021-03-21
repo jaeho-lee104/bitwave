@@ -45,7 +45,11 @@ object UpbitRemoteDataSource : UpbitDataSource {
         val call = UpbitClient.ticker(markets.map { it.market })
         val response = call.execute()
         return response.body()?.map {
-            Coin(name = marketInfos[it.market] ?: it.market, price = it.tradePrice.toString())
+            Coin(
+                market = it.market,
+                name = marketInfos[it.market] ?: it.market,
+                price = it.tradePrice
+            )
         } ?: emptyList()
     }
 
