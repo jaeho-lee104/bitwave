@@ -26,7 +26,8 @@ class CoinListAdapter : ListAdapter<Coin, CoinListAdapter.ViewHolder>(CoinDiffCa
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(coin: Coin) {
-            binding.title.text = coin.title
+            binding.name.text = coin.name
+            binding.price.text = coin.price
         }
 
         companion object {

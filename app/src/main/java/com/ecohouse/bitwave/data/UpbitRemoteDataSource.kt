@@ -44,8 +44,8 @@ object UpbitRemoteDataSource : UpbitDataSource {
         }
     }
 
-    private fun addCoin(title: String, price: String) {
-        val newCoin = Coin(title, price)
+    private fun addCoin(name: String, price: String) {
+        val newCoin = Coin(name = name, price = price)
         COINS_REMOTE_DATA[newCoin.id] = newCoin
     }
 }

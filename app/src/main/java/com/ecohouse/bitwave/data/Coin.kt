@@ -8,7 +8,7 @@ import java.util.*
  */
 data class Coin(
     var id: String = UUID.randomUUID().toString(),
-    var title: String = "",
+    var name: String = "",
     var price: String = ""
 ) {
 }

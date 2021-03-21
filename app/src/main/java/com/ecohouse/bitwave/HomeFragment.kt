@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.DividerItemDecoration
 import com.ecohouse.bitwave.coins.CoinListAdapter
 import com.ecohouse.bitwave.databinding.FragmentHomeBinding
 import com.ecohouse.bitwave.utils.getViewModelFactory
@@ -47,6 +48,13 @@ class HomeFragment : Fragment() {
     }
 
     private fun setupListAdapter() {
+        binding.coinList.addItemDecoration(
+            DividerItemDecoration(
+                context,
+                DividerItemDecoration.VERTICAL
+            )
+        )
+
         listAdapter = CoinListAdapter()
         binding.coinList.adapter = listAdapter
     }
