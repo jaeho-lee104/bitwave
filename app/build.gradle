@@ -6,6 +6,8 @@ plugins {
 
 }
 
+apply from: '../constants.gradle'
+
 android {
     compileSdkVersion 30
     buildToolsVersion "30.0.3"
@@ -57,7 +59,12 @@ dependencies {
 
 
     // Kotlin
+
+    implementation "androidx.fragment:fragment-ktx:$fragmentKtxVersion"
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
     implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
+    implementation "androidx.lifecycle:lifecycle-extensions:$archLifecycleVersion"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$archLifecycleVersion"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$archLifecycleVersion"
 
 }
