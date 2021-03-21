@@ -1,8 +1,10 @@
 package com.ecohouse.bitwave.data
 
+import androidx.annotation.WorkerThread
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import kotlinx.coroutines.delay
+import com.ecohouse.bitwave.data.network.Market
+import com.ecohouse.bitwave.data.network.UpbitClient
 
 
 /**
@@ -10,13 +12,7 @@ import kotlinx.coroutines.delay
  */
 object UpbitRemoteDataSource : UpbitDataSource {
 
-    private const val SERVICE_LATENCY_IN_MILLIS = 2000L
-    private var COINS_REMOTE_DATA = LinkedHashMap<String, Coin>(2)
-
-    init {
-        addCoin("XRP", "500")
-        addCoin("EOS", "4000")
-    }
+    private val marketInfos = LinkedHashMap<String, String>()
 
     private val observableCoins = MutableLiveData<Result<List<Coin>>>()
 
@@ -24,10 +20,39 @@ object UpbitRemoteDataSource : UpbitDataSource {
         observableCoins.value = getCoins()
     }
 
+    @WorkerThread
     override suspend fun getCoins(): Result<List<Coin>> {
-        val coins = COINS_REMOTE_DATA.values.toList()
-        delay(SERVICE_LATENCY_IN_MILLIS)
+        val markets = getKrwMarkets()
+        if (markets.isNullOrEmpty()) {
+            return Result.Error(IllegalStateException("market list is empty !!"))
+        }
+        updateMarketInfos(markets)
+        val coins = getKrwCoins(markets)
         return Result.Success(coins)
+    }
+
+    @WorkerThread
+    private fun getKrwMarkets(): List<Market> {
+        val call = UpbitClient.marketAll()
+        val response = call.execute()
+        return response.body()?.filter {
+            it.market.contains("KRW-")
+        } ?: emptyList()
+    }
+
+    @WorkerThread
+    private fun getKrwCoins(markets: List<Market>): List<Coin> {
+        val call = UpbitClient.ticker(markets.map { it.market })
+        val response = call.execute()
+        return response.body()?.map {
+            Coin(name = marketInfos[it.market] ?: it.market, price = it.tradePrice.toString())
+        } ?: emptyList()
+    }
+
+    private fun updateMarketInfos(markets: List<Market>) {
+        markets.forEach {
+            marketInfos[it.market] = it.koreanName
+        }
     }
 
     override fun observeCoins(): LiveData<Result<List<Coin>>> {
@@ -35,17 +60,10 @@ object UpbitRemoteDataSource : UpbitDataSource {
     }
 
     override suspend fun deleteAllCoins() {
-        COINS_REMOTE_DATA.clear()
+        //NO-OP
     }
 
     override suspend fun saveCoins(coins: List<Coin>) {
-        coins.forEach {
-            COINS_REMOTE_DATA[it.id] = it
-        }
-    }
-
-    private fun addCoin(name: String, price: String) {
-        val newCoin = Coin(name = name, price = price)
-        COINS_REMOTE_DATA[newCoin.id] = newCoin
+        //NO-OP
     }
 }

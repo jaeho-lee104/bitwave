@@ -3,6 +3,7 @@ package com.ecohouse.bitwave.data
 import androidx.lifecycle.LiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 
 /**
@@ -23,7 +24,9 @@ class DefaultUpbitRepository(
     }
 
     private suspend fun updateCoinsFromRemoteDataSource() {
-        val remoteCoins = upbitRemoteDataSource.getCoins()
+        val remoteCoins = withContext(ioDispatcher) {
+            upbitRemoteDataSource.getCoins()
+        }
         if (remoteCoins is Result.Success) {
             upbitLocalDataSource.deleteAllCoins()
             upbitLocalDataSource.saveCoins(remoteCoins.data)
