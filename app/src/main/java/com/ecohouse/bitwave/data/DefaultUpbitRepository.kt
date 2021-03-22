@@ -32,7 +32,9 @@ class DefaultUpbitRepository(
             upbitLocalDataSource.saveCoins(remoteCoins.data)
 
         } else if (remoteCoins is Result.Error) {
-            throw remoteCoins.exception
+            println("updateCoinsFromRemoteDataSource failed. cause: ${remoteCoins.exception}")
+            upbitLocalDataSource.deleteAllCoins()
+            upbitLocalDataSource.saveCoins(emptyList())
         }
     }
 

@@ -44,6 +44,9 @@ class CoinListAdapter : ListAdapter<Coin, RecyclerView.ViewHolder>(CoinDiffCallb
         }
     }
 
+    override fun getItemCount(): Int {
+        return 1 + super.getItemCount()
+    }
 
     class HeaderViewHolder private constructor(binding: HeaderItemBinding) :
         RecyclerView.ViewHolder(binding.root) {

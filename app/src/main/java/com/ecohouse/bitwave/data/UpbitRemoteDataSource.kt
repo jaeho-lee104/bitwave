@@ -24,7 +24,11 @@ object UpbitRemoteDataSource : UpbitDataSource {
 
     @WorkerThread
     override suspend fun getCoins(): Result<List<Coin>> {
-        val markets = getKrwMarkets()
+        val markets = try {
+            getKrwMarkets()
+        } catch (e: Exception) {
+            return Result.Error(e)
+        }
         if (markets.isNullOrEmpty()) {
             return Result.Error(IllegalStateException("market list is empty !!"))
         }
