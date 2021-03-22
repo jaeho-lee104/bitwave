@@ -42,7 +42,7 @@ data class Ticker(
 
     @Expose
     @SerializedName("trade_price")
-    private var _trade_price: String? = null,
+    private var _trade_price: Double? = null,
 
     @Expose
     @SerializedName("prev_closing_price")
@@ -133,8 +133,8 @@ data class Ticker(
     val lowPrice: Double
         get() = _low_price ?: Double.MIN_VALUE
 
-    val tradePrice: String
-        get() = _trade_price ?: ""
+    val tradePrice: Double
+        get() = _trade_price ?: Double.MIN_VALUE
 
     val prevClosingPrice: Double
         get() = _prev_closing_price ?: Double.MIN_VALUE

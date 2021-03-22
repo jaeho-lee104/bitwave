@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.ecohouse.bitwave.data.Coin
 import com.ecohouse.bitwave.databinding.CoinItemBinding
 import com.ecohouse.bitwave.databinding.HeaderItemBinding
+import com.ecohouse.bitwave.utils.formatDisplay
 
 
 /**
@@ -62,7 +63,7 @@ class CoinListAdapter : ListAdapter<Coin, RecyclerView.ViewHolder>(CoinDiffCallb
 
         fun bind(coin: Coin) {
             binding.name.text = coin.name
-            binding.price.text = coin.price
+            binding.price.text = coin.price.formatDisplay()
         }
 
         companion object {

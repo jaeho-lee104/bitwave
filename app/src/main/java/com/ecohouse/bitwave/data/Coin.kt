@@ -7,6 +7,6 @@ package com.ecohouse.bitwave.data
 data class Coin(
     var market: String = "",
     var name: String = "",
-    var price: String = ""
+    var price: Double = Double.MIN_VALUE
 ) {
 }
