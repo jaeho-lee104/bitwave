@@ -1,5 +1,6 @@
 package com.ecohouse.bitwave.data
 
+import android.annotation.SuppressLint
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -16,6 +17,7 @@ object UpbitRemoteDataSource : UpbitDataSource {
 
     private val observableCoins = MutableLiveData<Result<List<Coin>>>()
 
+    @SuppressLint("NullSafeMutableLiveData")
     override suspend fun refreshCoins() {
         observableCoins.value = getCoins()
     }
@@ -48,7 +50,9 @@ object UpbitRemoteDataSource : UpbitDataSource {
             Coin(
                 market = it.market,
                 name = marketInfos[it.market] ?: it.market,
-                price = it.tradePrice
+                price = it.tradePrice,
+                changeRate = it.changeRate.times(100),
+                volume = it.accTradePrice
             )
         } ?: emptyList()
     }

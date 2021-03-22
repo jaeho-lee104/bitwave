@@ -1,5 +1,6 @@
 package com.ecohouse.bitwave.data
 
+import android.annotation.SuppressLint
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 
@@ -11,8 +12,9 @@ import androidx.lifecycle.MutableLiveData
 class UpbitLocalDataSource : UpbitDataSource {
 
     private val observableCoins = MutableLiveData<Result<List<Coin>>>()
-    private var COINS_LOCAL_DATA = LinkedHashMap<String, Coin>()
+    private var localCoins = LinkedHashMap<String, Coin>()
 
+    @SuppressLint("NullSafeMutableLiveData")
     override suspend fun refreshCoins() {
         observableCoins.value = getCoins()
     }
@@ -22,17 +24,17 @@ class UpbitLocalDataSource : UpbitDataSource {
     }
 
     override suspend fun getCoins(): Result<List<Coin>> {
-        val coins = COINS_LOCAL_DATA.values.toList()
+        val coins = localCoins.values.toList()
         return Result.Success(coins)
     }
 
     override suspend fun deleteAllCoins() {
-        COINS_LOCAL_DATA.clear()
+        localCoins.clear()
     }
 
     override suspend fun saveCoins(coins: List<Coin>) {
         coins.forEach {
-            COINS_LOCAL_DATA[it.market] = it
+            localCoins[it.market] = it
         }
         refreshCoins()
     }

@@ -64,6 +64,8 @@ class CoinListAdapter : ListAdapter<Coin, RecyclerView.ViewHolder>(CoinDiffCallb
         fun bind(coin: Coin) {
             binding.name.text = coin.name
             binding.price.text = coin.price.formatDisplay()
+            binding.changeRate.text = coin.changeRate.formatDisplay() + "%"
+            binding.volume.text = coin.volume.formatDisplay()
         }
 
         companion object {
