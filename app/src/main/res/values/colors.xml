@@ -12,6 +12,6 @@
     <color name="divider_color">@color/black</color>
     <color name="minus_rate_text_color">@color/raw_03a9f4</color>
     <color name="plus_rate_text_color">@color/raw_ef5350</color>
-    <color name="odd_row_color">@color/raw_f5f5f5</color>
-    <color name="even_row_color">@color/transparent</color>
+    <color name="odd_row_background_color">@color/raw_f9f9f9</color>
+    <color name="even_row_background_color">@color/transparent</color>
 </resources>

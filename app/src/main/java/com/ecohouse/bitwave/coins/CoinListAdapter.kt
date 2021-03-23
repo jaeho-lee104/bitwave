@@ -59,7 +59,7 @@ class CoinListAdapter : ListAdapter<Coin, RecyclerView.ViewHolder>(CoinDiffCallb
                     else -> breakOutRate.setTextColor(getColor(R.color.coin_item_default_text_color))
                 }
 
-                root.setBackgroundColor(getColor(if (position % 2 == 1) R.color.odd_row_color else R.color.even_row_color))
+                root.setBackgroundColor(getColor(if (position % 2 == 1) R.color.odd_row_background_color else R.color.even_row_background_color))
 
             }
         }
