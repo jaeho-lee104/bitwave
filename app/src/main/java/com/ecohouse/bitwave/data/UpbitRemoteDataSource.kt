@@ -55,7 +55,7 @@ object UpbitRemoteDataSource : UpbitDataSource {
                 market = it.market,
                 name = marketInfos[it.market] ?: it.market,
                 price = it.tradePrice,
-                changeRate = it.changeRate.times(100),
+                changeRate = it.signedChangeRate.times(100),
                 volume = it.accTradePrice
             )
         } ?: emptyList()
