@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="DividerVertical">
+        <item name="android:background">@color/divider_color</item>
+        <item name="android:layout_width">0.5dp</item>
+        <item name="android:layout_height">@dimen/divider_height</item>
+    </style>
+</resources>

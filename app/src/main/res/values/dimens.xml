@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="divider_width">1dp</dimen>
+    <dimen name="divider_height">10dp</dimen>
+    <dimen name="coin_name_width">80dp</dimen>
+    <dimen name="coin_trade_price_width">60dp</dimen>
+    <dimen name="coin_change_rate_width">45dp</dimen>
+    <dimen name="coin_volume_width">120dp</dimen>
+    <dimen name="coin_item_height">44dp</dimen>
+    <dimen name="coin_header_height">30dp</dimen>
+    <dimen name="coin_item_text_size">12dp</dimen>
+    <dimen name="coin_item_column_margin">10dp</dimen>
+</resources>
