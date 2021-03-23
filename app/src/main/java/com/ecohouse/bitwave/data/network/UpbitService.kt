@@ -16,4 +16,11 @@ interface UpbitService {
     @GET("ticker")
     fun ticker(@Query("markets") markets: String): Call<List<Ticker>>
 
+    @GET("candles/days")
+    fun candleDays(
+        @Query("market") market: String,
+        @Query("to") to: String,
+        @Query("count") count: Int
+    ): Call<List<Candle>>
+
 }

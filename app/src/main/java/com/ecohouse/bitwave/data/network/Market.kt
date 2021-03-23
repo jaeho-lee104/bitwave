@@ -10,15 +10,15 @@ import com.google.gson.annotations.SerializedName
 data class Market(
     @Expose
     @SerializedName("market")
-    private var _market: String? = null,
+    private var _market: String?,
 
     @Expose
     @SerializedName("korean_name")
-    private var _koreanName: String? = null,
+    private var _koreanName: String?,
 
     @Expose
     @SerializedName("english_name")
-    private var _englishName: String? = null,
+    private var _englishName: String?,
 ) {
     val market: String
         get() = _market ?: ""

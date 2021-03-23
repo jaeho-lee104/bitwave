@@ -46,4 +46,8 @@ object UpbitClient {
         return service.ticker(markets.joinToString(separator = ","))
     }
 
+    fun candleDays(market: String, to: String, count: Int): Call<List<Candle>> {
+        return service.candleDays(market, to, count)
+    }
+
 }
