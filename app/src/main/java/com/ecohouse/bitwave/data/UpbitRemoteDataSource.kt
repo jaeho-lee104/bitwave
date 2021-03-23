@@ -4,8 +4,13 @@ import android.annotation.SuppressLint
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.ecohouse.bitwave.data.network.Candle
 import com.ecohouse.bitwave.data.network.Market
+import com.ecohouse.bitwave.data.network.Ticker
 import com.ecohouse.bitwave.data.network.UpbitClient
+import kotlinx.coroutines.delay
+import java.time.Instant
+import java.time.temporal.ChronoUnit
 
 
 /**
@@ -13,7 +18,9 @@ import com.ecohouse.bitwave.data.network.UpbitClient
  */
 object UpbitRemoteDataSource : UpbitDataSource {
 
+    private var lastLoadedTimeStamp: Long = Long.MIN_VALUE
     private val marketInfos = LinkedHashMap<String, String>()
+    private val yesterdayCandleMap = LinkedHashMap<String, Candle>()
 
     private val observableCoins = MutableLiveData<Result<List<Coin>>>()
 
@@ -25,20 +32,47 @@ object UpbitRemoteDataSource : UpbitDataSource {
     @WorkerThread
     override suspend fun getCoins(): Result<List<Coin>> {
         val markets = try {
-            getKrwMarkets()
+            loadKrwMarkets()
         } catch (e: Exception) {
             return Result.Error(e)
         }
         if (markets.isNullOrEmpty()) {
-            return Result.Error(IllegalStateException("market list is empty !!"))
+            return Result.Error(IllegalStateException("market list is empty!!"))
         }
-        updateMarketInfos(markets)
-        val coins = getKrwCoins(markets)
+        updateMarkets(markets)
+        val tickers = loadTickers(markets)
+        if (tickers.isNullOrEmpty()) {
+            return Result.Error(IllegalStateException("tickers are empty!!"))
+        }
+        if (yesterdayCandleMap.isEmpty()) {
+            updateYesterdayCandles(markets)
+        }
+        if (yesterdayCandleMap.isEmpty()) {
+            return Result.Error(IllegalStateException("candles are empty!!"))
+        }
+        val coins = manufactureCoins(tickers)
         return Result.Success(coins)
     }
 
+    private fun manufactureCoins(tickers: List<Ticker>): List<Coin> {
+        return tickers.map {
+            val candle = yesterdayCandleMap[it.market]!!
+            Coin(
+                market = it.market,
+                name = marketInfos[it.market] ?: it.market,
+                price = it.tradePrice,
+                changeRate = it.signedChangeRate.times(100),
+                volume = it.accTradePrice,
+                openingPrice = it.openingPrice,
+                prevVolume = candle.candleAccTradeVolume,
+                prevHighPrice = candle.highPrice,
+                prevLowPrice = candle.lowPrice
+            )
+        }
+    }
+
     @WorkerThread
-    private fun getKrwMarkets(): List<Market> {
+    private fun loadKrwMarkets(): List<Market> {
         val call = UpbitClient.marketAll()
         val response = call.execute()
         return response.body()?.filter {
@@ -47,21 +81,30 @@ object UpbitRemoteDataSource : UpbitDataSource {
     }
 
     @WorkerThread
-    private fun getKrwCoins(markets: List<Market>): List<Coin> {
+    private fun loadTickers(markets: List<Market>): List<Ticker> {
         val call = UpbitClient.ticker(markets.map { it.market })
         val response = call.execute()
-        return response.body()?.map {
-            Coin(
-                market = it.market,
-                name = marketInfos[it.market] ?: it.market,
-                price = it.tradePrice,
-                changeRate = it.signedChangeRate.times(100),
-                volume = it.accTradePrice
-            )
-        } ?: emptyList()
+        lastLoadedTimeStamp = response.body()?.firstOrNull()?.timestamp ?: lastLoadedTimeStamp
+        return response.body() ?: emptyList()
     }
 
-    private fun updateMarketInfos(markets: List<Market>) {
+    @WorkerThread
+    private suspend fun updateYesterdayCandles(markets: List<Market>) {
+        if (lastLoadedTimeStamp == Long.MIN_VALUE) {
+            return
+        }
+        val instant = Instant.ofEpochMilli(lastLoadedTimeStamp).minus(1, ChronoUnit.DAYS).toString()
+        markets.forEach {
+            val call = UpbitClient.candleDays(it.market, instant, 1)
+            val response = call.execute()
+            response.body()?.let { candle ->
+                yesterdayCandleMap[it.market] = candle.first()
+            }
+            delay(200)
+        }
+    }
+
+    private fun updateMarkets(markets: List<Market>) {
         markets.forEach {
             marketInfos[it.market] = it.koreanName
         }
@@ -78,4 +121,7 @@ object UpbitRemoteDataSource : UpbitDataSource {
     override suspend fun saveCoins(coins: List<Coin>) {
         //NO-OP
     }
+
+    //Instant.ofEpochMilli(it.timestamp.toLong()).minus(1, ChronoUnit.DAYS)
+    //2021-03-22T15:49:28.105Z
 }
