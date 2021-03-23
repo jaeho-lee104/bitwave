@@ -64,7 +64,7 @@ object UpbitRemoteDataSource : UpbitDataSource {
                 changeRate = it.signedChangeRate.times(100),
                 volume = it.accTradePrice,
                 openingPrice = it.openingPrice,
-                prevVolume = candle.candleAccTradeVolume,
+                prevVolume = candle.candleAccTradePrice,
                 prevHighPrice = candle.highPrice,
                 prevLowPrice = candle.lowPrice
             )
