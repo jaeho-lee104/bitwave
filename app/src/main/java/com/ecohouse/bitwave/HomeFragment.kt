@@ -39,10 +39,6 @@ class HomeFragment : Fragment() {
         setupHeader()
         setupListAdapter()
         subscribeUi()
-    }
-
-    override fun onStart() {
-        super.onStart()
         viewModel.loadCoins(true)
     }
 

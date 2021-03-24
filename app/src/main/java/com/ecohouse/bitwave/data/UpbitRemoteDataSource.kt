@@ -10,6 +10,8 @@ import com.ecohouse.bitwave.data.network.Ticker
 import com.ecohouse.bitwave.data.network.UpbitClient
 import kotlinx.coroutines.delay
 import java.time.Instant
+import java.time.LocalDateTime
+import java.time.ZoneOffset
 import java.time.temporal.ChronoUnit
 
 
@@ -18,10 +20,9 @@ import java.time.temporal.ChronoUnit
  */
 object UpbitRemoteDataSource : UpbitDataSource {
 
-    private var lastLoadedTimeStamp: Long = Long.MIN_VALUE
+    private var lastLoadedTimestamp: Long = Long.MIN_VALUE
     private val marketInfos = LinkedHashMap<String, String>()
     private val yesterdayCandleMap = LinkedHashMap<String, Candle>()
-
     private val observableCoins = MutableLiveData<Result<List<Coin>>>()
 
     @SuppressLint("NullSafeMutableLiveData")
@@ -52,6 +53,27 @@ object UpbitRemoteDataSource : UpbitDataSource {
         }
         val coins = manufactureCoins(tickers)
         return Result.Success(coins)
+    }
+
+    private fun updateLastLoadedTimestamp(newTimestamp: Long) {
+        if (lastLoadedTimestamp != Long.MIN_VALUE) {
+            val prevDateTime = LocalDateTime.ofInstant(
+                Instant.ofEpochMilli(lastLoadedTimestamp),
+                ZoneOffset.ofTotalSeconds(0)
+            )
+            val newDateTime = LocalDateTime.ofInstant(
+                Instant.ofEpochMilli(newTimestamp),
+                ZoneOffset.ofTotalSeconds(0)
+            )
+            if (prevDateTime.dayOfMonth != newDateTime.dayOfMonth) {
+                invalidateYesterdayCandleMap()
+            }
+        }
+        lastLoadedTimestamp = newTimestamp
+    }
+
+    private fun invalidateYesterdayCandleMap() {
+        yesterdayCandleMap.clear()
     }
 
     private fun manufactureCoins(tickers: List<Ticker>): List<Coin> {
@@ -86,16 +108,16 @@ object UpbitRemoteDataSource : UpbitDataSource {
     private fun loadTickers(markets: List<Market>): List<Ticker> {
         val call = UpbitClient.ticker(markets.map { it.market })
         val response = call.execute()
-        lastLoadedTimeStamp = response.body()?.firstOrNull()?.timestamp ?: lastLoadedTimeStamp
+        updateLastLoadedTimestamp(response.body()?.firstOrNull()?.timestamp ?: lastLoadedTimestamp)
         return response.body() ?: emptyList()
     }
 
     @WorkerThread
     private suspend fun updateYesterdayCandles(markets: List<Market>) {
-        if (lastLoadedTimeStamp == Long.MIN_VALUE) {
+        if (lastLoadedTimestamp == Long.MIN_VALUE) {
             return
         }
-        val instant = Instant.ofEpochMilli(lastLoadedTimeStamp).minus(1, ChronoUnit.DAYS).toString()
+        val instant = Instant.ofEpochMilli(lastLoadedTimestamp).minus(1, ChronoUnit.DAYS).toString()
         markets.forEach {
             val call = UpbitClient.candleDays(it.market, instant, 1)
             val response = call.execute()
