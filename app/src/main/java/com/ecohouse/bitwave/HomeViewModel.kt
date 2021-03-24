@@ -5,6 +5,7 @@ import androidx.lifecycle.*
 import com.ecohouse.bitwave.data.Coin
 import com.ecohouse.bitwave.data.Result
 import com.ecohouse.bitwave.data.UpbitRepository
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 
@@ -22,9 +23,11 @@ class HomeViewModel(private val upbitRepository: UpbitRepository) : ViewModel() 
                 viewModelScope.launch {
                     upbitRepository.refreshCoins()
                     _dataLoading.value = false
+                    delay(1000)
+                    loadCoins(true)
                 }
             }
-            upbitRepository.observeCoins().distinctUntilChanged().switchMap {
+            upbitRepository.observeCoins().switchMap {
                 filterCoins(it)
             }
         }
