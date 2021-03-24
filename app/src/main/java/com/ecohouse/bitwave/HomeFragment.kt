@@ -1,6 +1,8 @@
 package com.ecohouse.bitwave
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +13,7 @@ import com.ecohouse.bitwave.coins.CoinListAdapter
 import com.ecohouse.bitwave.data.Coin
 import com.ecohouse.bitwave.databinding.FragmentHomeBinding
 import com.ecohouse.bitwave.utils.getViewModelFactory
+import com.ecohouse.bitwave.views.LoadingDialog
 import com.ecohouse.bitwave.views.SortingOptions
 import com.ecohouse.bitwave.views.SortingState
 import com.ecohouse.bitwave.views.SortingStateView
@@ -19,8 +22,30 @@ class HomeFragment : Fragment() {
 
     private lateinit var binding: FragmentHomeBinding
     private lateinit var listAdapter: CoinListAdapter
+    private lateinit var loadingDialog: LoadingDialog
     private var sortingOptions: SortingOptions = SortingOptions.VOLUME
     private var descending = true
+    private var handler = Handler(Looper.getMainLooper(), Handler.Callback {
+        when (it.what) {
+            LOADING_DIALOG_SHOW_MSG -> {
+                if (!loadingDialog.isShowing) {
+                    loadingDialog.show()
+                }
+            }
+            LOADING_DIALOG_HIDE_MSG -> {
+                if (loadingDialog.isShowing) {
+                    loadingDialog.dismiss()
+                }
+            }
+        }
+        true
+    })
+
+    companion object {
+        const val LOADING_DIALOG_DELAY_MS = 1000L
+        const val LOADING_DIALOG_SHOW_MSG = 1
+        const val LOADING_DIALOG_HIDE_MSG = 2
+    }
 
     private val viewModel by viewModels<HomeViewModel> {
         getViewModelFactory()
@@ -39,12 +64,23 @@ class HomeFragment : Fragment() {
         setupHeader()
         setupListAdapter()
         subscribeUi()
+        loadingDialog = LoadingDialog(requireContext())
         viewModel.loadCoins(true)
     }
 
     private fun subscribeUi() {
         viewModel.items.observe(viewLifecycleOwner) {
             listAdapter.submitList(sortByCurrentOptions(it))
+        }
+
+        viewModel.dataLoading.observe(viewLifecycleOwner) {
+            if (it) {
+                handler.removeCallbacksAndMessages(null)
+                handler.sendEmptyMessageDelayed(LOADING_DIALOG_SHOW_MSG, LOADING_DIALOG_DELAY_MS)
+            } else {
+                handler.removeCallbacksAndMessages(null)
+                handler.sendEmptyMessage(LOADING_DIALOG_HIDE_MSG)
+            }
         }
     }
 

@@ -14,4 +14,5 @@
     <dimen name="coin_header_height">30dp</dimen>
     <dimen name="coin_item_text_size">12dp</dimen>
     <dimen name="coin_item_column_margin">10dp</dimen>
+    <dimen name="loading_dialog_size">50dp</dimen>
 </resources>
