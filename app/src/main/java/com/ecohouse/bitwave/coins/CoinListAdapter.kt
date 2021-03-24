@@ -37,25 +37,22 @@ class CoinListAdapter : ListAdapter<Coin, RecyclerView.ViewHolder>(CoinDiffCallb
                 price.text = coin.price.formatDisplay()
                 volume.text = coin.volume.formatDisplay()
 
-                changeRate.text = coin.changeRate.formatDisplay().plus("%")
+                changeRate.text = coin.changePriceRate.formatDisplay().plus("%")
                 when {
-                    coin.changeRate > 0 -> changeRate.setTextColor(getColor(R.color.plus_rate_text_color))
-                    coin.changeRate < 0 -> changeRate.setTextColor(getColor(R.color.minus_rate_text_color))
+                    coin.changePriceRate > 0 -> changeRate.setTextColor(getColor(R.color.plus_rate_text_color))
+                    coin.changePriceRate < 0 -> changeRate.setTextColor(getColor(R.color.minus_rate_text_color))
                     else -> changeRate.setTextColor(getColor(R.color.coin_item_default_text_color))
                 }
 
-                val volumeRateValue = (coin.volume * 100) / coin.prevVolume
-                volumeRate.text = volumeRateValue.formatDisplay().plus("%")
+                volumeRate.text = coin.volumeChangeRate.formatDisplay().plus("%")
                 when {
-                    volumeRateValue > 100 -> volumeRate.setTextColor(getColor(R.color.plus_rate_text_color))
+                    coin.volumeChangeRate > 100 -> volumeRate.setTextColor(getColor(R.color.plus_rate_text_color))
                     else -> volumeRate.setTextColor(getColor(R.color.coin_item_default_text_color))
                 }
 
-                val basePrice = (coin.prevHighPrice - coin.prevLowPrice) * 0.5 + coin.openingPrice
-                val breakOutRateValue = ((coin.price * 100) / basePrice)
-                breakOutRate.text = breakOutRateValue.formatDisplay().plus("%")
+                breakOutRate.text = coin.breakOutRate.formatDisplay().plus("%")
                 when {
-                    breakOutRateValue > 100 -> breakOutRate.setTextColor(getColor(R.color.plus_rate_text_color))
+                    coin.breakOutRate > 100 -> breakOutRate.setTextColor(getColor(R.color.plus_rate_text_color))
                     else -> breakOutRate.setTextColor(getColor(R.color.coin_item_default_text_color))
                 }
 

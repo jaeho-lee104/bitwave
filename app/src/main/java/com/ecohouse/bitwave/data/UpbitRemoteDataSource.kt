@@ -61,12 +61,14 @@ object UpbitRemoteDataSource : UpbitDataSource {
                 market = it.market,
                 name = marketInfos[it.market] ?: it.market,
                 price = it.tradePrice,
-                changeRate = it.signedChangeRate.times(100),
+                changePriceRate = it.signedChangeRate * 100,
                 volume = it.accTradePrice,
                 openingPrice = it.openingPrice,
                 prevVolume = candle.candleAccTradePrice,
                 prevHighPrice = candle.highPrice,
-                prevLowPrice = candle.lowPrice
+                prevLowPrice = candle.lowPrice,
+                volumeChangeRate = (it.accTradePrice * 100) / candle.candleAccTradePrice,
+                breakOutRate = (it.tradePrice * 100) / ((candle.highPrice - candle.lowPrice) * 0.5 + it.openingPrice)
             )
         }
     }
