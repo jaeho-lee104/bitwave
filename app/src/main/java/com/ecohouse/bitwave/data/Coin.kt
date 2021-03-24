@@ -8,7 +8,7 @@ data class Coin(
     val market: String,
     val name: String,
     val price: Double,
-    val changePriceRate: Double,
+    val priceChangeRate: Double,
     val volume: Double,
     val openingPrice: Double,
     val prevVolume: Double,

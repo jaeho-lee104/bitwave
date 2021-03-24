@@ -1,5 +1,6 @@
 package com.ecohouse.bitwave
 
+import android.annotation.SuppressLint
 import androidx.lifecycle.*
 import com.ecohouse.bitwave.data.Coin
 import com.ecohouse.bitwave.data.Result
@@ -37,6 +38,7 @@ class HomeViewModel(private val upbitRepository: UpbitRepository) : ViewModel() 
         _forceUpdate.value = forceUpdate
     }
 
+    @SuppressLint("NullSafeMutableLiveData")
     private fun filterCoins(coinsResult: Result<List<Coin>>): LiveData<List<Coin>> {
         val result = MutableLiveData<List<Coin>>()
         if (coinsResult is Result.Success) {

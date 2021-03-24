@@ -6,17 +6,17 @@
         android:layout_width="wrap_content"
         android:layout_height="@dimen/coin_header_height">
 
-        <TextView
+        <com.ecohouse.bitwave.views.SortingStateView
             android:id="@+id/coin_name_title"
             android:layout_width="@dimen/coin_name_width"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="코인명"
-            android:textColor="@color/purple_200"
-            android:textSize="@dimen/coin_item_text_size"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:title="코인명"
+            app:titleColor="@color/purple_200"
+            app:titleSize="@dimen/coin_item_text_size" />
 
         <View
             android:id="@+id/divider1"

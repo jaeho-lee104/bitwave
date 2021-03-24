@@ -37,10 +37,10 @@ class CoinListAdapter : ListAdapter<Coin, RecyclerView.ViewHolder>(CoinDiffCallb
                 price.text = coin.price.formatDisplay()
                 volume.text = coin.volume.formatDisplay()
 
-                changeRate.text = coin.changePriceRate.formatDisplay().plus("%")
+                changeRate.text = coin.priceChangeRate.formatDisplay().plus("%")
                 when {
-                    coin.changePriceRate > 0 -> changeRate.setTextColor(getColor(R.color.plus_rate_text_color))
-                    coin.changePriceRate < 0 -> changeRate.setTextColor(getColor(R.color.minus_rate_text_color))
+                    coin.priceChangeRate > 0 -> changeRate.setTextColor(getColor(R.color.plus_rate_text_color))
+                    coin.priceChangeRate < 0 -> changeRate.setTextColor(getColor(R.color.minus_rate_text_color))
                     else -> changeRate.setTextColor(getColor(R.color.coin_item_default_text_color))
                 }
 
