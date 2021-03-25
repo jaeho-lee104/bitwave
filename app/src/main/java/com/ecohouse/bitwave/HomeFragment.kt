@@ -104,6 +104,9 @@ class HomeFragment : Fragment() {
         binding.breakOutRate.setOnClickListener {
             handleSortViewOnClick(binding.breakOutRate, SortingOptions.BREAK_OUT_RATE)
         }
+        binding.rsiValue.setOnClickListener {
+            handleSortViewOnClick(binding.rsiValue, SortingOptions.RSI)
+        }
     }
 
     private fun handleSortViewOnClick(view: SortingStateView, option: SortingOptions) {
@@ -149,6 +152,7 @@ class HomeFragment : Fragment() {
             SortingOptions.VOLUME -> binding.volumeTitle
             SortingOptions.CHANGE_VOLUME_RATE -> binding.volumeRateTitle
             SortingOptions.BREAK_OUT_RATE -> binding.breakOutRate
+            SortingOptions.RSI -> binding.rsiValue
             else -> null
         }
     }

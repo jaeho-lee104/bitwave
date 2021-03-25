@@ -15,5 +15,6 @@ data class Coin(
     val prevHighPrice: Double,
     val prevLowPrice: Double,
     val volumeChangeRate: Double,
-    val breakOutRate: Double
+    val breakOutRate: Double,
+    val rsi: Double
 )

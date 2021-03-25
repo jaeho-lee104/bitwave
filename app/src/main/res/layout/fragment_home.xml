@@ -149,6 +149,28 @@
                         app:titleColor="@color/purple_200"
                         app:titleSize="@dimen/coin_item_text_size" />
 
+                    <View
+                        android:id="@+id/divider6"
+                        style="@style/DividerVertical"
+                        android:layout_marginStart="@dimen/coin_item_column_margin"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/break_out_rate"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <com.ecohouse.bitwave.views.SortingStateView
+                        android:id="@+id/rsi_value"
+                        android:layout_width="@dimen/coin_rsi_value_width"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/coin_item_column_margin"
+                        android:gravity="center"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/divider6"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:title="rsi"
+                        app:titleColor="@color/purple_200"
+                        app:titleSize="@dimen/coin_item_text_size" />
+
+
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <View style="@style/DividerHorizontal" />

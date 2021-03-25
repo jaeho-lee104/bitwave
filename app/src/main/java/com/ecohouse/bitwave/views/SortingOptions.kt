@@ -7,7 +7,11 @@ import com.ecohouse.bitwave.data.Coin
  * @author leejaeho on 2021. 03. 24..
  */
 enum class SortingOptions(val code: Int) {
-
+    NONE(-1) {
+        override fun sort(coins: List<Coin>, descending: Boolean): List<Coin> {
+            return coins
+        }
+    },
     COIN_NAME(0) {
         override fun sort(coins: List<Coin>, descending: Boolean): List<Coin> = if (descending) {
             coins.sortedByDescending { it.name }
@@ -54,9 +58,11 @@ enum class SortingOptions(val code: Int) {
         }
 
     },
-    NONE(6) {
-        override fun sort(coins: List<Coin>, descending: Boolean): List<Coin> {
-            return coins
+    RSI(6) {
+        override fun sort(coins: List<Coin>, descending: Boolean): List<Coin> = if (descending) {
+            coins.sortedByDescending { it.rsi }
+        } else {
+            coins.sortedBy { it.rsi }
         }
     };
 

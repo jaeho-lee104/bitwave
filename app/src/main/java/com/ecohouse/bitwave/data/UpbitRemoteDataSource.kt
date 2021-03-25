@@ -23,7 +23,10 @@ object UpbitRemoteDataSource : UpbitDataSource {
     private var lastLoadedTimestamp: Long = Long.MIN_VALUE
     private val marketInfos = LinkedHashMap<String, String>()
     private val yesterdayCandleMap = LinkedHashMap<String, Candle>()
+    private val lastCandleMap = LinkedHashMap<String, List<Candle>>()
+    private val rsiSumMap = LinkedHashMap<String, Pair<Double, Double>>()
     private val observableCoins = MutableLiveData<Result<List<Coin>>>()
+    private const val RSI_RANGE = 14
 
     @SuppressLint("NullSafeMutableLiveData")
     override suspend fun refreshCoins() {
@@ -47,6 +50,7 @@ object UpbitRemoteDataSource : UpbitDataSource {
         }
         if (yesterdayCandleMap.isEmpty()) {
             updateYesterdayCandles(markets)
+            preprocessRsi()
         }
         if (yesterdayCandleMap.isEmpty()) {
             return Result.Error(IllegalStateException("candles are empty!!"))
@@ -76,6 +80,42 @@ object UpbitRemoteDataSource : UpbitDataSource {
         yesterdayCandleMap.clear()
     }
 
+
+    private fun preprocessRsi() {
+        lastCandleMap.forEach { (market, candleList) ->
+            var upSum = 0.0
+            var downSum = 0.0
+            candleList.forEachIndexed { index, _ ->
+                if (index != 0) {
+                    val before = candleList[index].tradePrice
+                    val after = candleList[index - 1].tradePrice
+                    if (after > before) {
+                        upSum += (after - before)
+                    } else if (before > after) {
+                        downSum += (before - after)
+                    }
+                }
+            }
+            rsiSumMap[market] = upSum to downSum
+        }
+    }
+
+    private fun calculateRsi(ticker: Ticker): Double {
+        var down = 0.0
+        var up = 0.0
+        ticker.run {
+            if (openingPrice > tradePrice) {
+                down += (openingPrice - tradePrice)
+            } else if (tradePrice > openingPrice) {
+                up += (tradePrice - openingPrice)
+            }
+            val accRsiSum = rsiSumMap[market]!!
+            val averageUp = (up + accRsiSum.first) / RSI_RANGE
+            val averageDown = (down + accRsiSum.second) / RSI_RANGE
+            return (averageUp * 100) / (averageUp + averageDown)
+        }
+    }
+
     private fun manufactureCoins(tickers: List<Ticker>): List<Coin> {
         return tickers.map {
             val candle = yesterdayCandleMap[it.market]!!
@@ -90,7 +130,8 @@ object UpbitRemoteDataSource : UpbitDataSource {
                 prevHighPrice = candle.highPrice,
                 prevLowPrice = candle.lowPrice,
                 volumeChangeRate = (it.accTradePrice * 100) / candle.candleAccTradePrice,
-                breakOutRate = (it.tradePrice * 100) / ((candle.highPrice - candle.lowPrice) * 0.5 + it.openingPrice)
+                breakOutRate = (it.tradePrice * 100) / ((candle.highPrice - candle.lowPrice) * 0.5 + it.openingPrice),
+                rsi = calculateRsi(it)
             )
         }
     }
@@ -119,10 +160,11 @@ object UpbitRemoteDataSource : UpbitDataSource {
         }
         val instant = Instant.ofEpochMilli(lastLoadedTimestamp).minus(1, ChronoUnit.DAYS).toString()
         markets.forEach {
-            val call = UpbitClient.candleDays(it.market, instant, 1)
+            val call = UpbitClient.candleDays(it.market, instant, RSI_RANGE)
             val response = call.execute()
-            response.body()?.let { candle ->
-                yesterdayCandleMap[it.market] = candle.first()
+            response.body()?.let { candles ->
+                yesterdayCandleMap[it.market] = candles.first()
+                lastCandleMap[it.market] = candles
             }
             delay(200)
         }
