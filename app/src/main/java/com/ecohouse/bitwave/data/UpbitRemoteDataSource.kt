@@ -131,7 +131,9 @@ object UpbitRemoteDataSource : UpbitDataSource {
                 prevLowPrice = candle.lowPrice,
                 volumeChangeRate = (it.accTradePrice * 100) / candle.candleAccTradePrice,
                 breakOutRate = (it.tradePrice * 100) / ((candle.highPrice - candle.lowPrice) * 0.5 + it.openingPrice),
-                rsi = calculateRsi(it)
+                rsi = calculateRsi(it),
+                highPriceRate = (it.tradePrice * 100 / it.highPrice) - 100,
+                lowPriceRate = it.tradePrice * 100 / it.lowPrice - 100
             )
         }
     }

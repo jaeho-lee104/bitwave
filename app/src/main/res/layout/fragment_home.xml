@@ -170,6 +170,48 @@
                         app:titleColor="@color/purple_200"
                         app:titleSize="@dimen/coin_item_text_size" />
 
+                    <View
+                        android:id="@+id/divider7"
+                        style="@style/DividerVertical"
+                        android:layout_marginStart="@dimen/coin_item_column_margin"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/rsi_value"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <com.ecohouse.bitwave.views.SortingStateView
+                        android:id="@+id/high_price_rate"
+                        android:layout_width="@dimen/coin_high_price_rate_width"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/coin_item_column_margin"
+                        android:gravity="center"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/divider7"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:title="고점대비"
+                        app:titleColor="@color/purple_200"
+                        app:titleSize="@dimen/coin_item_text_size" />
+
+                    <View
+                        android:id="@+id/divider8"
+                        style="@style/DividerVertical"
+                        android:layout_marginStart="@dimen/coin_item_column_margin"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/high_price_rate"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <com.ecohouse.bitwave.views.SortingStateView
+                        android:id="@+id/low_price_rate"
+                        android:layout_width="@dimen/coin_low_price_rate_width"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/coin_item_column_margin"
+                        android:gravity="center"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/divider8"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:title="저점대비"
+                        app:titleColor="@color/purple_200"
+                        app:titleSize="@dimen/coin_item_text_size" />
+
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 

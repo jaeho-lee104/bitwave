@@ -64,6 +64,20 @@ enum class SortingOptions(val code: Int) {
         } else {
             coins.sortedBy { it.rsi }
         }
+    },
+    HIGH_PRICE_RATE(7) {
+        override fun sort(coins: List<Coin>, descending: Boolean): List<Coin> = if (descending) {
+            coins.sortedByDescending { it.highPriceRate }
+        } else {
+            coins.sortedBy { it.highPriceRate }
+        }
+    },
+    LOW_PRICE_RATE(8) {
+        override fun sort(coins: List<Coin>, descending: Boolean): List<Coin> = if (descending) {
+            coins.sortedByDescending { it.lowPriceRate }
+        } else {
+            coins.sortedBy { it.lowPriceRate }
+        }
     };
 
     companion object {

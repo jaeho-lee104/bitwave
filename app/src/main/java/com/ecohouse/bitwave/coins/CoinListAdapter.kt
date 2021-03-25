@@ -63,6 +63,9 @@ class CoinListAdapter : ListAdapter<Coin, RecyclerView.ViewHolder>(CoinDiffCallb
                     else -> rsiValue.setTextColor(getColor(R.color.coin_item_default_text_color))
                 }
 
+                highPriceRate.text = coin.highPriceRate.formatDisplay().plus("%")
+                lowPriceRate.text = coin.lowPriceRate.formatDisplay().plus("%")
+
                 root.setBackgroundColor(getColor(if (position % 2 == 1) R.color.odd_row_background_color else R.color.even_row_background_color))
 
             }

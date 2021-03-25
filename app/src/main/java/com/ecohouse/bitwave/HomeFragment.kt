@@ -107,6 +107,12 @@ class HomeFragment : Fragment() {
         binding.rsiValue.setOnClickListener {
             handleSortViewOnClick(binding.rsiValue, SortingOptions.RSI)
         }
+        binding.highPriceRate.setOnClickListener {
+            handleSortViewOnClick(binding.highPriceRate, SortingOptions.HIGH_PRICE_RATE)
+        }
+        binding.lowPriceRate.setOnClickListener {
+            handleSortViewOnClick(binding.lowPriceRate, SortingOptions.LOW_PRICE_RATE)
+        }
     }
 
     private fun handleSortViewOnClick(view: SortingStateView, option: SortingOptions) {
@@ -153,6 +159,8 @@ class HomeFragment : Fragment() {
             SortingOptions.CHANGE_VOLUME_RATE -> binding.volumeRateTitle
             SortingOptions.BREAK_OUT_RATE -> binding.breakOutRate
             SortingOptions.RSI -> binding.rsiValue
+            SortingOptions.HIGH_PRICE_RATE -> binding.highPriceRate
+            SortingOptions.LOW_PRICE_RATE -> binding.lowPriceRate
             else -> null
         }
     }
