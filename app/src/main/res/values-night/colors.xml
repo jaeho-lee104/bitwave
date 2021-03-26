@@ -9,4 +9,5 @@
     <color name="white">#FFFFFFFF</color>
     <color name="divider_color">@color/white</color>
     <color name="coin_item_default_text_color">@color/white</color>
+    <color name="odd_row_background_color">@color/raw_212121</color>
 </resources>
