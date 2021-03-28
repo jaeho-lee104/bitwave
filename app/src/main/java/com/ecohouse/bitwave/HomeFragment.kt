@@ -1,9 +1,11 @@
 package com.ecohouse.bitwave
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
@@ -148,6 +150,7 @@ class HomeFragment : Fragment() {
     }
 
 
+    @SuppressLint("ClickableViewAccessibility")
     private fun setupListAdapter() {
         binding.coinList.addItemDecoration(
             DividerItemDecoration(
@@ -158,6 +161,15 @@ class HomeFragment : Fragment() {
 
         coinListAdapter = CoinListAdapter()
         binding.coinList.adapter = coinListAdapter
+        binding.coinList.setOnTouchListener { v, event ->
+            if (event.actionMasked == MotionEvent.ACTION_DOWN
+                || event.actionMasked == MotionEvent.ACTION_POINTER_DOWN
+            ) {
+                binding.coinList.stopScroll()
+                binding.rowHeaderList.stopScroll()
+            }
+            false
+        }
         binding.coinList.addOnScrollListener(object : RecyclerView.OnScrollListener() {
 
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
@@ -179,6 +191,15 @@ class HomeFragment : Fragment() {
         )
         rowHeaderListAdapter = RowHeaderListAdapter()
         binding.rowHeaderList.adapter = rowHeaderListAdapter
+        binding.rowHeaderList.setOnTouchListener { _, event ->
+            if (event.actionMasked == MotionEvent.ACTION_DOWN
+                || event.actionMasked == MotionEvent.ACTION_POINTER_DOWN
+            ) {
+                binding.coinList.stopScroll()
+                binding.rowHeaderList.stopScroll()
+            }
+            false
+        }
         binding.rowHeaderList.addOnScrollListener(object : RecyclerView.OnScrollListener() {
 
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
