@@ -9,7 +9,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.DividerItemDecoration
-import com.ecohouse.bitwave.coins.CoinListAdapter
+import androidx.recyclerview.widget.RecyclerView
 import com.ecohouse.bitwave.data.Coin
 import com.ecohouse.bitwave.databinding.FragmentHomeBinding
 import com.ecohouse.bitwave.utils.getViewModelFactory
@@ -17,15 +17,19 @@ import com.ecohouse.bitwave.views.LoadingDialog
 import com.ecohouse.bitwave.views.SortingOptions
 import com.ecohouse.bitwave.views.SortingState
 import com.ecohouse.bitwave.views.SortingStateView
+import com.ecohouse.bitwave.views.recyclerview.CoinListAdapter
+import com.ecohouse.bitwave.views.recyclerview.RowHeaderListAdapter
 
 class HomeFragment : Fragment() {
 
     private lateinit var binding: FragmentHomeBinding
-    private lateinit var listAdapter: CoinListAdapter
+    private lateinit var coinListAdapter: CoinListAdapter
+    private lateinit var rowHeaderListAdapter: RowHeaderListAdapter
     private lateinit var loadingDialog: LoadingDialog
     private var sortingOptions: SortingOptions = SortingOptions.VOLUME
     private var descending = true
-    private var handler = Handler(Looper.getMainLooper(), Handler.Callback {
+    private var scrollViewId: Int = 0
+    private var handler = Handler(Looper.getMainLooper()) {
         when (it.what) {
             LOADING_DIALOG_SHOW_MSG -> {
                 if (!loadingDialog.isShowing) {
@@ -39,7 +43,7 @@ class HomeFragment : Fragment() {
             }
         }
         true
-    })
+    }
 
     companion object {
         const val LOADING_DIALOG_DELAY_MS = 1000L
@@ -70,7 +74,9 @@ class HomeFragment : Fragment() {
 
     private fun subscribeUi() {
         viewModel.items.observe(viewLifecycleOwner) {
-            listAdapter.submitList(sortByCurrentOptions(it))
+            val sorted = sortByCurrentOptions(it)
+            coinListAdapter.submitList(sorted)
+            rowHeaderListAdapter.submitList(sorted)
         }
 
         viewModel.dataLoading.observe(viewLifecycleOwner) {
@@ -128,8 +134,12 @@ class HomeFragment : Fragment() {
             descending = true
         }
         view.sortingState = if (descending) SortingState.DESCENDING else SortingState.ASCENDING
-        listAdapter.submitList(sortByCurrentOptions(viewModel.items.value!!)) {
+        val sortedList = sortByCurrentOptions(viewModel.items.value!!)
+        coinListAdapter.submitList(sortedList) {
             binding.coinList.scrollToPosition(0)
+        }
+        rowHeaderListAdapter.submitList(sortedList) {
+            binding.rowHeaderList.scrollToPosition(0)
         }
     }
 
@@ -146,8 +156,41 @@ class HomeFragment : Fragment() {
             )
         )
 
-        listAdapter = CoinListAdapter()
-        binding.coinList.adapter = listAdapter
+        coinListAdapter = CoinListAdapter()
+        binding.coinList.adapter = coinListAdapter
+        binding.coinList.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                scrollViewId = binding.coinList.id
+            }
+
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                if (scrollViewId == binding.coinList.id) {
+                    binding.rowHeaderList.scrollBy(dx, dy)
+                }
+            }
+        })
+
+        binding.rowHeaderList.addItemDecoration(
+            DividerItemDecoration(
+                context,
+                DividerItemDecoration.VERTICAL
+            )
+        )
+        rowHeaderListAdapter = RowHeaderListAdapter()
+        binding.rowHeaderList.adapter = rowHeaderListAdapter
+        binding.rowHeaderList.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                scrollViewId = binding.rowHeaderList.id
+            }
+
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                if (scrollViewId == binding.rowHeaderList.id) {
+                    binding.coinList.scrollBy(dx, dy)
+                }
+            }
+        })
     }
 
     private fun getSortingStateViewOf(option: SortingOptions): SortingStateView? {

@@ -8,15 +8,57 @@
         android:layout_height="match_parent"
         android:padding="10dp">
 
+        <LinearLayout
+            android:id="@+id/row_header_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <com.ecohouse.bitwave.views.SortingStateView
+                android:id="@+id/coin_name_title"
+                android:layout_width="@dimen/coin_name_width"
+                android:layout_height="@dimen/coin_header_height"
+                android:gravity="center"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:title="코인명"
+                app:titleColor="@color/purple_200"
+                app:titleSize="@dimen/coin_item_text_size" />
+
+
+            <View style="@style/DividerHorizontal" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/row_header_list"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:overScrollMode="never"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+        </LinearLayout>
+
+
+        <View
+            android:id="@+id/row_header_divider"
+            android:layout_width="@dimen/vertical_divider_width"
+            android:layout_height="match_parent"
+            android:background="@color/divider_color"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/row_header_layout"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <HorizontalScrollView
             android:id="@+id/horizontal_scroll_layout"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
             android:overScrollMode="never"
             android:scrollbars="none"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@id/row_header_divider"
             app:layout_constraintTop_toTopOf="parent">
 
             <LinearLayout
@@ -29,33 +71,13 @@
                     android:layout_height="@dimen/coin_header_height">
 
                     <com.ecohouse.bitwave.views.SortingStateView
-                        android:id="@+id/coin_name_title"
-                        android:layout_width="@dimen/coin_name_width"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:title="코인명"
-                        app:titleColor="@color/purple_200"
-                        app:titleSize="@dimen/coin_item_text_size" />
-
-                    <View
-                        android:id="@+id/divider1"
-                        style="@style/DividerVertical"
-                        android:layout_marginStart="@dimen/coin_item_column_margin"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toEndOf="@id/coin_name_title"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <com.ecohouse.bitwave.views.SortingStateView
                         android:id="@+id/price_title"
                         android:layout_width="@dimen/coin_trade_price_width"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/coin_item_column_margin"
                         android:gravity="center"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toEndOf="@id/divider1"
+                        app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
                         app:title="현재가격"
                         app:titleColor="@color/purple_200"

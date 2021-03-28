@@ -8,24 +8,6 @@
         android:layout_height="@dimen/coin_item_height">
 
         <TextView
-            android:id="@+id/name"
-            android:layout_width="@dimen/coin_name_width"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:textSize="@dimen/coin_item_text_size"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <View
-            android:id="@+id/divider1"
-            style="@style/DividerVertical"
-            android:layout_marginStart="@dimen/coin_item_column_margin"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@id/name"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
             android:id="@+id/price"
             android:layout_width="@dimen/coin_trade_price_width"
             android:layout_height="wrap_content"
@@ -33,7 +15,7 @@
             android:gravity="center"
             android:textSize="@dimen/coin_item_text_size"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@id/divider1"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <View

@@ -1,4 +1,4 @@
-package com.ecohouse.bitwave.coins
+package com.ecohouse.bitwave.views.recyclerview
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -33,7 +33,6 @@ class CoinListAdapter : ListAdapter<Coin, RecyclerView.ViewHolder>(CoinDiffCallb
 
         fun bind(coin: Coin, position: Int) {
             binding.apply {
-                name.text = coin.name
                 price.text = coin.price.formatDisplay()
                 volume.text = coin.volume.formatDisplay()
 
@@ -65,9 +64,6 @@ class CoinListAdapter : ListAdapter<Coin, RecyclerView.ViewHolder>(CoinDiffCallb
 
                 highPriceRate.text = coin.highPriceRate.formatDisplay().plus("%")
                 lowPriceRate.text = coin.lowPriceRate.formatDisplay().plus("%")
-
-                root.setBackgroundColor(getColor(if (position % 2 == 1) R.color.odd_row_background_color else R.color.even_row_background_color))
-
             }
         }
 
