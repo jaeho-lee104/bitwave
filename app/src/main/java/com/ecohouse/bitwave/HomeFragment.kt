@@ -32,6 +32,9 @@ class HomeFragment : Fragment() {
     private var descending = true
     private var scrollViewId: Int = 0
     private var handler = Handler(Looper.getMainLooper()) {
+        if (isAdded.not() || isDetached) {
+            return@Handler true
+        }
         when (it.what) {
             LOADING_DIALOG_SHOW_MSG -> {
                 if (!loadingDialog.isShowing) {
@@ -48,7 +51,7 @@ class HomeFragment : Fragment() {
     }
 
     companion object {
-        const val LOADING_DIALOG_DELAY_MS = 1000L
+        const val LOADING_DIALOG_DELAY_MS = 1500L
         const val LOADING_DIALOG_SHOW_MSG = 1
         const val LOADING_DIALOG_HIDE_MSG = 2
     }
