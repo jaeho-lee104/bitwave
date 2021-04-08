@@ -16,8 +16,8 @@ android {
         applicationId "com.ecohouse.bitwave"
         minSdkVersion 26
         targetSdkVersion 30
-        versionCode 4
-        versionName "0.0.4"
+        versionCode 5
+        versionName "0.0.5"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
