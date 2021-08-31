@@ -21,6 +21,7 @@ import com.ecohouse.bitwave.views.SortingState
 import com.ecohouse.bitwave.views.SortingStateView
 import com.ecohouse.bitwave.views.recyclerview.CoinListAdapter
 import com.ecohouse.bitwave.views.recyclerview.RowHeaderListAdapter
+import com.tradingview.lightweightcharts.view.ChartsView
 
 class HomeFragment : Fragment() {
 

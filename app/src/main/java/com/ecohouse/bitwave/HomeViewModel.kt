@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
  */
 class HomeViewModel(private val upbitRepository: UpbitRepository) : ViewModel() {
 
-    private val _forceUpdate = MutableLiveData(false)
+    private val _forceUpdate = MutableLiveData(false)asdfa
 
     private val _items: LiveData<List<Coin>> =
         _forceUpdate.switchMap { forceUpdate ->
