@@ -23,7 +23,7 @@ jobs:
         stale-issue-message: 'Stale issue message'
         stale-pr-message: 'Stale pull request message'
         stale-issue-label: 'no-issue-activity'
-        stale-pr-label: 'no-pr-activity'
+        stale-pr-label: 'stale'
         days-before-issue-stale: 1
         days-before-pr-stale: 1
         days-before-issue-close: -1
