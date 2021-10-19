@@ -1,7 +1,5 @@
 name: GitHub Actions Demo
-on: 
-  issue_comment:
-    types: [created]
+on: [push]
 
 jobs:
   Explore-GitHub-Actions:
