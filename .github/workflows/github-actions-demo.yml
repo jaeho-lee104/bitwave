@@ -5,8 +5,8 @@ on:
 
 jobs:
   Explore-GitHub-Actions:
-    runs-on: ubuntu-latest
     if: contains(github.event.comment.body, 'run tests')
+    runs-on: ubuntu-latest
     steps:
       - id: helloaction
       - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
